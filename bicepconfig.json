@@ -1,0 +1,37 @@
+{
+  // See https://aka.ms/bicep/config for more information on Bicep configuration options
+  // Press CTRL+SPACE/CMD+SPACE at any location to see Intellisense suggestions
+  "analyzers": {
+    "core": {
+      "rules": {
+        "no-unused-params": {
+          "level": "error"
+        },
+        "no-unused-vars": {
+          "level": "error"
+        },
+        "adminusername-should-not-be-literal": {
+          "level": "error"
+        },
+        "no-hardcoded-env-urls": {
+          "level": "error"
+        },
+        "no-hardcoded-location": {
+          "level": "error"
+        },
+        "no-unnecessary-dependson": {
+          "level": "error"
+        },
+        "no-unused-existing-resources": {
+          "level": "error"
+        },
+        "prefer-interpolation": {
+          "level": "error"
+        },
+        "use-recent-api-versions": {
+          "level": "error"
+        }
+      }
+    }
+  }
+}
