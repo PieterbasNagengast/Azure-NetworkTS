@@ -10,8 +10,11 @@ The goal here is to not only understand the issue but also to understand the too
 > [!NOTE]
 > This template and the pre-defined scenarios are highly customizable so please feel free to modify the template and scenarios to fit your learning needs or use this as a starting point to create your own network troubleshooting lab.
 
->[!WARNING]
+> [!WARNING]
 > This template is for educational purposes only and should not be used in production environments.
+
+<!-- omit in toc -->
+## Table of Contents
 
 1. [Deployment steps](#deployment-steps)
 2. [Tools to use for troubleshooting](#tools-to-use-for-troubleshooting)
