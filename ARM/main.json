@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.24.24.22086",
-      "templateHash": "5920192278316679722"
+      "templateHash": "4676807538639425237"
     }
   },
   "parameters": {
@@ -31,7 +31,7 @@
       "type": "securestring",
       "defaultValue": "[newGuid()]",
       "metadata": {
-        "description": "The password for the VM."
+        "description": "The password for the VM. by default it is a new GUID. we dont want to expose the password in the template. And we dont care about the password. we just want to deploy the resources."
       }
     },
     "adminUsername": {

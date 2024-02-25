@@ -10,7 +10,7 @@ param location string = resourceGroup().location
 param tsScenario string
 
 @secure()
-@description('The password for the VM.')
+@description('The password for the VM. by default it is a new GUID. we dont want to expose the password in the template. And we dont care about the password. we just want to deploy the resources.')
 param adminPassword string = newGuid()
 
 @description('Admin username for the VM.')
