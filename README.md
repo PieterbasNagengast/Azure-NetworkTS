@@ -64,13 +64,13 @@ Deploy the template using one of the following methods:
 
 ## Tools to use for troubleshooting
 
-- Azure Network Watcher
-- IP Flow Verify
-- NSG Diagnostics
-- Next Hop
-- Effective Routes
-- Effective Security Rules
-- Connection Troubleshoot
+- [Azure Network Watcher](https://learn.microsoft.com/en-us/azure/network-watcher/network-watcher-overview)
+- [IP Flow Verify](https://learn.microsoft.com/en-us/azure/network-watcher/ip-flow-verify-overview)
+- [NSG Diagnostics](https://learn.microsoft.com/en-us/azure/network-watcher/network-watcher-network-configuration-diagnostics-overview)
+- [Next Hop](https://learn.microsoft.com/en-us/azure/network-watcher/network-watcher-next-hop-overview)
+- [Effective Routes](https://learn.microsoft.com/en-us/azure/virtual-network/diagnose-network-routing-problem)
+- [Effective Security Rules](https://learn.microsoft.com/en-us/azure/network-watcher/effective-security-rules-overview)
+- [Connection Troubleshoot](https://learn.microsoft.com/en-us/azure/network-watcher/connection-troubleshoot-overview)
 
 ## Diagram of the deployment
 
