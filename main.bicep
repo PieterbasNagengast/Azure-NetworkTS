@@ -16,47 +16,119 @@ param adminPassword string
 @description('Admin username for the VM.')
 param adminUsername string
 
-var ipaddressSpace = [
+@description('The IP address space for the virtual network.')
+param ipaddressSpace array = [
   '10.0.0.0/24'
 ]
-var subnetAddressPrefix = cidrSubnet(ipaddressSpace[0], 25, 0)
-var vnetName = 'vnet-networkts'
-var nsgName = 'nsg-networkts'
-var udrName = 'udr-networkts'
-var vmName = 'networkts-vm'
 
-var nsgScenarioA = [
-  {
-    name: 'deny-inbound-ssh'
-    properties: {
-      protocol: 'Tcp'
-      sourcePortRange: '*'
-      destinationPortRange: '22'
-      sourceAddressPrefix: '*'
-      destinationAddressPrefix: '*'
-      access: 'Deny'
-      priority: 100
-      direction: 'Inbound'
-    }
-  }
+@description('The name of the virtual network.')
+param vnetName string = 'vnet'
+
+// variables
+// The names of the virtual machines
+var vmNames = [
+  'vm-FrontEnd'
+  'vm-BackEnd'
 ]
 
-var nsgScenarioB = [
-  {
-    name: 'deny-outbound-rdp'
-    properties: {
-      protocol: 'Tcp'
-      sourcePortRange: '*'
-      destinationPortRange: '3389'
-      sourceAddressPrefix: '*'
-      destinationAddressPrefix: ipaddressSpace[0]
-      access: 'Deny'
-      priority: 100
-      direction: 'Outbound'
+// The network security group and route table configurations for each scenario
+var scenarios = {
+  A: {
+    nsg: [
+      {
+        name: 'nsg-FrontEnd'
+        rules: [
+          {
+            name: 'deny-inbound-ssh'
+            properties: {
+              protocol: 'Tcp'
+              sourcePortRange: '*'
+              destinationPortRange: '22'
+              sourceAddressPrefix: '*'
+              destinationAddressPrefix: '*'
+              access: 'Deny'
+              priority: 100
+              direction: 'Inbound'
+            }
+          }
+        ]
+      }
+      {
+        name: 'nsg-BackEnd'
+        rules: [
+          {
+            name: 'deny-inbound-ssh'
+            properties: {
+              protocol: 'Tcp'
+              sourcePortRange: '*'
+              destinationPortRange: '22'
+              sourceAddressPrefix: '*'
+              destinationAddressPrefix: '*'
+              access: 'Deny'
+              priority: 100
+              direction: 'Inbound'
+            }
+          }
+        ]
+      }
+    ]
+    udr: {
+      name: 'RouteTable'
+      routes: [
+        {
+          name: 'route1'
+          properties: {
+            addressPrefix: '0.0.0.0/0'
+            nextHopType: 'VirtualAppliance'
+            nextHopIpAddress: '1.2.3.4'
+          }
+        }
+      ]
     }
   }
-]
+  B: {
+    nsg: [
+      {
+        name: 'nsg-FrontEnd'
+        rules: []
+      }
+      {
+        name: 'nsg-BackEnd'
+        rules: []
+      }
+    ]
+    udr: {
+      name: 'RouteTable'
+      routes: []
+    }
+  }
+}
 
+// get the scenario configuration
+var scenario = scenarios[tsScenario]
+
+// deploy the resources in the region using AVM modules
+// deploy the network security groups
+module nsg 'br/public:avm/res/network/network-security-group:0.1.2' = [for nsg in scenario.nsg: {
+  name: 'deploy-${nsg.name}'
+  params: {
+    name: nsg.name
+    location: location
+    securityRules: !empty(nsg.rules) ? nsg.rules : []
+  }
+}]
+
+// deploy the route table
+module routeTable 'br/public:avm/res/network/route-table:0.2.1' = {
+  name: 'deploy-routeTable'
+  params: {
+    name: scenario.udr.name
+    location: location
+    routes: !empty(scenario.udr.routes) ? scenario.udr.routes : []
+  }
+}
+
+// deploy the virtual network
 module vnet 'br/public:avm/res/network/virtual-network:0.1.1' = {
   name: 'deploy-vnet'
   params: {
@@ -66,58 +138,34 @@ module vnet 'br/public:avm/res/network/virtual-network:0.1.1' = {
     subnets: [
       {
         name: 'subnet1'
-        networkSecurityGroupResourceId: nsg.outputs.resourceId
-        addressPrefix: subnetAddressPrefix
-        // routeTableResourceId: tsScenario == 'C' ? routeTable.outputs.resourceId : ''
+        networkSecurityGroupResourceId: nsg[0].outputs.resourceId
+        addressPrefix: cidrSubnet(ipaddressSpace[0], 25, 0)
+        routeTableResourceId: routeTable.outputs.resourceId
       }
-    ]
-  }
-}
-
-module nsg 'br/public:avm/res/network/network-security-group:0.1.2' = {
-  name: 'deploy-nsg'
-  params: {
-    name: nsgName
-    location: location
-    securityRules: tsScenario == 'A' ? nsgScenarioA : tsScenario == 'B' ? nsgScenarioB : []
-  }
-}
-
-module routeTable 'br/public:avm/res/network/route-table:0.2.1' = if (tsScenario == 'C') {
-  name: 'deploy-routeTable'
-  params: {
-    name: udrName
-    location: location
-    routes: [
       {
-        name: 'fubar'
-        properties: {
-          addressPrefix: '0.0.0.0/0'
-          nextHopType: 'VirtualAppliance'
-          nextHopIpAddress: '1.2.3.4'
-        }
+        name: 'subnet2'
+        networkSecurityGroupResourceId: nsg[1].outputs.resourceId
+        addressPrefix: cidrSubnet(ipaddressSpace[0], 25, 1)
+        routeTableResourceId: routeTable.outputs.resourceId
       }
     ]
   }
 }
 
-module vm 'br/public:avm/res/compute/virtual-machine:0.2.1' = {
-  name: 'deploy-vm'
-  dependsOn: [
-    vnet
-    nsg
-  ]
+// deploy the virtual machines
+module vm 'br/public:avm/res/compute/virtual-machine:0.2.1' = [for (vmName, i) in vmNames: {
+  name: 'deploy-${vmName}'
   params: {
     name: vmName
     location: location
-    vmSize: 'Standard_DS1_v2'
+    vmSize: 'Standard_B2s'
     osType: 'Windows'
     encryptionAtHost: false
     osDisk: {
       caching: 'ReadWrite'
       diskSizeGB: '128'
       managedDisk: {
-        storageAccountType: 'Premium_LRS'
+        storageAccountType: 'Standard_LRS'
       }
     }
     adminUsername: adminUsername
@@ -130,14 +178,15 @@ module vm 'br/public:avm/res/compute/virtual-machine:0.2.1' = {
     }
     nicConfigurations: [
       {
+        enableAcceleratedNetworking: false
         ipConfigurations: [
           {
             name: 'ipconfig01'
-            subnetResourceId: vnet.outputs.subnetResourceIds[0]
+            subnetResourceId: vnet.outputs.subnetResourceIds[i]
           }
         ]
         nicSuffix: '-nic-01'
       }
     ]
   }
-}
+}]
