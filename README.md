@@ -22,6 +22,7 @@ The goal here is to not only understand the issue but also to understand the too
 4. [Scenario A: FrontEnd VM cannot connect via RDP to BackeEnd VM](#scenario-a-frontend-vm-cannot-connect-via-rdp-to-backeend-vm)
 5. [Scenario B: VM's cannot connect to Internet](#scenario-b-vms-cannot-connect-to-internet)
 6. [Scenario C: Backend VM cannot connect to FrontEnd VM](#scenario-c-backend-vm-cannot-connect-to-frontend-vm)
+7. [Solution](#solution)
 
 
 ## Deployment steps
@@ -97,3 +98,7 @@ The VM's seem to have some issues connecting to Internet. Both VM's are in separ
 
 We want to be able to connect from BackEndVM to FrontEnd VM on port 3389 (RDP). Both VM's are in separate Subnets but in same VNET. It seems like the subnet where BackEndVM is located is completely isolated. None of our tests where succesful. Both VM's don't have Public IP Addresses assigned as our security policy doens't allow Public IP's to be assigned to VM's. Both Subnets have separate Network Security Groups (NSG's) associated with them. Also a UDR's (Route Table) has been assigned to both subnets. VNET is using Azure provided DNS server.
 
+## Solution
+
+*Haha... uhmmm... In the tangled web of ones and zeros, where routers quiver and firewalls tremble, behold the ultimate solution: YOU. With quantum intent and algorithmic finesse, you whisper to packets, 'Fear not, for I am the shortest path' And so, dear reader, amidst entropy's chaos, you emerge—a beacon of connectivity, a troubleshooter extraordinaire. It's not a bug; it's a feature. You are the network whisperer.
+*
