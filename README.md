@@ -8,11 +8,13 @@ The key here is to not only understand the issue but also to understand the tool
 
 ## Deployment steps
 
-### Azure Portal Deployment
+Deploy the template using one of the following methods:
+
+### 1. Azure Portal Deployment
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FPieterbasNagengast%2FAzure-NetworkTS%2Fmain%2Fmain.bicep)
 
-### Manual deployment
+### 2. Manual deployment
 
 1. Open your prefered Powershell (e.eg. Azure Cloud Shell, PowerShell)
 2. Clone the repository
