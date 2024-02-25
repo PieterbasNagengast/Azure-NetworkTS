@@ -1,5 +1,5 @@
 <!-- omit in toc -->
-# Azure-NetworkTS
+# Azure Basic Network Troubleshooting Lab
 
 This repository contains a Azure deployment template for two Virtual machines in separate Subnmets but in a single VNET.
 Deployiong this template allows you to use Azure Network troubleshooting tools like Network Watcher, NSG Flow Logs, and Diagnostics logs to troubleshoot network issues.
