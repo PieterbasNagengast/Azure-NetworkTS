@@ -1,0 +1,63 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2021-09-09/uiFormDefinition.schema.json",
+    "view": {
+        "kind": "Form",
+        "properties": {
+            "title": "Azure Network Troubleshooting",
+            "steps": [
+                {
+                    "name": "basics",
+                    "label": "Basics",
+                    "elements": [
+                        {
+                            "name": "resourceScope",
+                            "type": "Microsoft.Common.ResourceScope",
+                            "location": {
+                                "resourceTypes": [
+                                    "microsoft.resources/resourcegroups"
+                                ]
+                            }
+                        },
+                        {
+                            "name": "tsScenario",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Troutbleshout Scenario",
+                            "subLabel": "",
+                            "defaultValue": " ",
+                            "toolTip": "The troubleshooting scenario to deploy. Start with Scenario A.",
+                            "constraints": {
+                                "required": true,
+                                "allowedValues": [
+                                    {
+                                        "label": "A",
+                                        "value": "A"
+                                    },
+                                    {
+                                        "label": "B",
+                                        "value": "B"
+                                    },
+                                    {
+                                        "label": "C",
+                                        "value": "C"
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        }
+                    ]
+                }
+            ]
+        },
+        "outputs": {
+            "kind": "ResourceGroup",
+            "location": "[steps('basics').resourceScope.location.name]",
+            "resourceGroupId": "[steps('basics').resourceScope.resourceGroup.id]",
+            "parameters": {
+                "location": "[steps('basics').resourceScope.location.name]",
+                "tsScenario": "[steps('basics').tsScenario]"
+            }
+        }
+    }
+}

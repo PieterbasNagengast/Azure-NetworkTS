@@ -8,24 +8,41 @@ The key here is to not only understand the issue but also to understand the tool
 
 ## Deployment steps
 
-1. Clone the repository
-2. Open the Azure Cloud Shell
+### Azure Portal Deployment
+
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FPieterbasNagengast%2FAzure-NetworkTS%2Fmain%2Fmain.bicep)
+
+### Manual deployment
+
+1. Open your prefered Powershell (e.eg. Azure Cloud Shell, PowerShell)
+2. Clone the repository
+
+    ``` powershell
+    git clone https://github.com/PieterbasNagengast/Azure-NetworkTS.git
+    ```
+
 3. Change the directory to the cloned repository
-4. Run the following command to deploy the template
+4. Create new resource group using the following command
 
-```bash
-az deployment group create --resource-group <resource-group-name> --template-file azuredeploy.json --parameters azuredeploy.parameters.json
-```
+    ``` powershell
+    New-AzResourceGroup -Name <resource-group-name> -Location <location>
+    ```
 
-5. Once the deployment is complete, you can access the resources in the Azure Portal.
-6. To simulate the network issues, you can use the pre-defined scenarios and then use the Azure Network troubleshooting tools to troubleshoot the issues.
-7. If you have successfully troubleshooted the issue you can re-deploy the template (go to step 4) to reset the resources and select the next scenario to troubleshoot.
-7. Once you are done with the troubleshooting, you can delete the resource group to clean up the resources.
-8. To delete the resource group, run the following command in the Azure Cloud Shell
+5. Run the following command to deploy the template
 
-```bash
-az group delete --name <resource-group-name> --yes --no-wait
-```
+    ``` powershell
+    New-AzResourceGroupDeployment -ResourceGroupName <resource-group-name> -TemplateFile .\main.bicep
+    ```
+
+6. Once the deployment is complete, you can access the resources in the Azure Portal.
+7. To simulate the network issues, you can use the pre-defined scenarios and then use the Azure Network troubleshooting tools to troubleshoot the issues.
+8. If you have successfully troubleshooted the issue you can re-deploy the template (go to step 4) to reset the resources and select the next scenario to troubleshoot.
+9.  Once you are done with the troubleshooting, you can delete the resource group to clean up the resources.
+10. To delete the resource group, run the following command in the Azure Cloud Shell
+
+    ``` powershell
+    Remove-AzResourceGroup -Name <resource-group-name> -Force
+    ```
 
 ## Tools to use for troubleshooting
 
