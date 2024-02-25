@@ -11,10 +11,10 @@ param tsScenario string
 
 @secure()
 @description('The password for the VM.')
-param adminPassword string
+param adminPassword string = newGuid()
 
 @description('Admin username for the VM.')
-param adminUsername string
+param adminUsername string = 'NetworkTSUser'
 
 @description('The IP address space for the virtual network.')
 param ipaddressSpace array = [
@@ -39,37 +39,39 @@ var scenarios = {
         name: 'nsg-FrontEnd'
         rules: [
           {
-            name: 'deny-inbound-ssh'
+            name: 'nsgrule'
             properties: {
               protocol: 'Tcp'
               sourcePortRange: '*'
-              destinationPortRange: '22'
+              destinationPortRange: '3389'
               sourceAddressPrefix: '*'
               destinationAddressPrefix: '*'
               access: 'Deny'
               priority: 100
-              direction: 'Inbound'
+              direction: 'Outbound'
             }
           }
         ]
       }
       {
         name: 'nsg-BackEnd'
-        rules: [
-          {
-            name: 'deny-inbound-ssh'
-            properties: {
-              protocol: 'Tcp'
-              sourcePortRange: '*'
-              destinationPortRange: '22'
-              sourceAddressPrefix: '*'
-              destinationAddressPrefix: '*'
-              access: 'Deny'
-              priority: 100
-              direction: 'Inbound'
-            }
-          }
-        ]
+        rules: []
+      }
+    ]
+    udr: {
+      name: 'RouteTable'
+      routes: []
+    }
+  }
+  B: {
+    nsg: [
+      {
+        name: 'nsg-FrontEnd'
+        rules: []
+      }
+      {
+        name: 'nsg-BackEnd'
+        rules: []
       }
     ]
     udr: {
@@ -86,7 +88,7 @@ var scenarios = {
       ]
     }
   }
-  B: {
+  C: {
     nsg: [
       {
         name: 'nsg-FrontEnd'
@@ -94,12 +96,47 @@ var scenarios = {
       }
       {
         name: 'nsg-BackEnd'
-        rules: []
+        rules: [
+          {
+            name: 'nsgrule1'
+            properties: {
+              protocol: 'Tcp'
+              sourcePortRange: '*'
+              destinationPortRange: '3389'
+              sourceAddressPrefix: '*'
+              destinationAddressPrefix: cidrSubnet(ipaddressSpace[0], 25, 0)
+              access: 'Allow'
+              priority: 200
+              direction: 'Outbound'
+            }
+          }
+          {
+            name: 'nsgrule2'
+            properties: {
+              protocol: 'Tcp'
+              sourcePortRange: '*'
+              destinationPortRange: '3389'
+              sourceAddressPrefix: '*'
+              destinationAddressPrefix: '*'
+              access: 'Deny'
+              priority: 100
+              direction: 'Outbound'
+            }
+          }
+        ]
       }
     ]
     udr: {
       name: 'RouteTable'
-      routes: []
+      routes: [
+        {
+          name: 'route1'
+          properties: {
+            addressPrefix: cidrSubnet(ipaddressSpace[0], 25, 0)
+            nextHopType: 'None'
+          }
+        }
+      ]
     }
   }
 }
