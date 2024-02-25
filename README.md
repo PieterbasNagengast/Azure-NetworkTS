@@ -24,7 +24,6 @@ The goal here is to not only understand the issue but also to understand the too
 6. [Scenario C: Backend VM cannot connect to FrontEnd VM](#scenario-c-backend-vm-cannot-connect-to-frontend-vm)
 7. [Solution](#solution)
 
-
 ## Deployment steps
 
 Deploy the template using one of the following methods:
@@ -100,5 +99,4 @@ We want to be able to connect from BackEndVM to FrontEnd VM on port 3389 (RDP). 
 
 ## Solution
 
-*Haha... uhmmm... In the tangled web of ones and zeros, where routers quiver and firewalls tremble, behold the ultimate solution: YOU. With quantum intent and algorithmic finesse, you whisper to packets, 'Fear not, for I am the shortest path' And so, dear reader, amidst entropy's chaos, you emerge—a beacon of connectivity, a troubleshooter extraordinaire. It's not a bug; it's a feature. You are the network whisperer.
-*
+_In the tangled web of ones and zeros, where routers quiver and firewalls tremble, behold the ultimate solution: YOU. With quantum intent and algorithmic finesse, you whisper to packets, 'Fear not, for I am the shortest path' And so, dear reader, amidst entropy's chaos, you emerge—a beacon of connectivity, a troubleshooter extraordinaire. It's not a bug; it's a feature. You are the network whisperer._
